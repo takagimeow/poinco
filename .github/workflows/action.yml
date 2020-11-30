@@ -1,0 +1,23 @@
+name: Poinco Test
+
+on:
+  push:
+    branches: 
+      - main
+      - 'refactoring/readability'
+
+jobs:
+  test: # ユニークなID
+    name: Test all callbacks
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2 # 最新のコミットをチェックアウトする（workflowがこのプロジェクトを利用できるようにするため$GITHUB_WORKSPACE配下にcloneする)
+    - name: Setup
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: 必要なパッケージをインストール
+      run: yarn install
+    - name: テストする
+      run:  yarn run test:prod
