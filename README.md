@@ -49,7 +49,7 @@ points[5].fTxnDate = new Date('2020/11/15 12:15');
 const pointAmount = 250;
 const counterparty = 'GRIDS SAPPORO';
 
-const payResult = pay(points, 250, counterparty);
+const payResult = pay(points, pointAmount, counterparty);
 const estimatedPoint = Poinco.estimate(billingAmount - substractor, 0.01);
 const gp =
   estimatedPoint > 0 ? new Point(estimatedPoint, counterparty, 'NORMAL', 'GET') : null;
