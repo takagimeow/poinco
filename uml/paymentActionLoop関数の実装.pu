@@ -1,0 +1,36 @@
+@startuml
+
+title "paymentActionLoop関数の実装"
+
+|呼び出し側|
+
+:Point型の配列と使用するポイント数渡して\npaymentActionLoop関数を呼び出す;
+
+|paymentActionLoop|
+
+if (feeが0以下である) then (yes)
+  :return;
+else
+  repeat
+    :Point型の配列から値を取得する;
+    :paymentAction関数を呼び出す;
+    |PointインスタンスのpaymentActioonメソッド|
+    if (自分の.netAmountが引数に与えられたポイント数以上の場合) then (yes)
+      :自分のnetAmountプロパティからポイント数を引く;
+      :自分のnetAmountプロパティを上記の値に更新する;
+      :この処理をもって十分であることと\n残りのポイント数0を返す;
+    else (no)
+      :ポイント数から自分のnetAmountプロパティを引く;
+      :自分のnetAmountプロパティを0にする;
+      :この処理だけでは十分でないことと\n残りのポイント数を返す;
+    endif
+    |paymentActionLoop|
+    :何時のポイントに対していくら差し引いたかを記録する;
+  repeat while(Point型の配列のすべての値を処理するまで)
+  :処理済みのPoint型の配列と与えられたポイント数に対して使用したポイント数と\n差し引きした現時点でのポイント数を返す;
+  stop
+endif
+|呼び出し側|
+:渡したPoint型の配列と\n0に設定されたspentGrossAmountと\n未使用のfeeが返される;
+
+@enduml

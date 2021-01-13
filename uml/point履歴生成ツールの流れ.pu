@@ -1,0 +1,52 @@
+@startuml
+
+title "Point履歴生成ツールの流れ"
+
+|generatePoints|
+start
+
+:履歴の個数を受け取る;
+:counterpartyの配列を受け取る;
+:日付を受け取る;
+
+repeat
+
+  partition ポイント数生成 {
+    :ランダムな値を生成;
+    :ランダムな値を500で割る;
+    :割った答えと200をかける;
+    :その値をポイント数として保存する;
+  }
+
+  :GETとUSEをランダムで選ぶ;
+
+  :会社名を配列からランダムに選ぶ;
+  
+  if (GETの場合) then (yes)
+    :NORMALかLIMITEDをランダムで選ぶ;
+    :Pointクラスのインスタンスを生成する;
+  else (USEの場合)
+    :まず生成されたポイント数が現在のポイント数で賄えるかを確認する;
+    if (まかなえる場合) then (yes)
+      :pay関数を呼び出す;
+      |payMock|
+      :まかなえる場合はLIMITEDとNORMALでそれぞれ何ポイント使用するのかを計算する;
+      |generatePoints|
+      if (LIMITEDのUSEポイントが必要な場合) then (yes)
+        :Pointクラスのインスタンスを生成する;
+      endif
+      if (NORMALのUSEポイントが必要な場合) then (yes)
+        :Pointクラスのインスタンスを生成する;
+      endif
+    else
+      :continue;
+    endif
+  endif
+
+repeat while(指定された回数)
+
+:作成されたポイントの配列をjsonに変換;
+
+:jsonをcsvに変換して保存する;
+
+@enduml

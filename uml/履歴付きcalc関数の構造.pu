@@ -1,0 +1,85 @@
+@startuml
+
+title "履歴付きcalc関数の構造"
+
+:Point型の配列pointsが与えられる;
+
+:pointsをtype別に分ける;
+
+fork
+
+  repeat
+    :limitedUsePointsから要素を抜き出す;
+    
+    repeat
+      :limitedGetPointsから要素を抜き出す;
+
+      :limitedGetPointからlimitedUsePointを引く;
+      if (limitedGetPointのnetAmountがlimitedUsePointのnetAmountよりも大きい) then (yes)
+        :limitedGetPointのnetAmountを更新する;
+        :limitedUsePointのnetAmountを0に更新する;
+        :何月何日limitedGetPointからlimitedUsePointを引いて残高がいくらになったことを履歴に入れる;
+      else
+        :limitedGetPointのnetAmountを0に更新する;
+        :limitedUsePointのnetAmountを引いた残りの値に更新する;
+        :limitedGetPointからlimitedUsePointを引いたことを履歴に入れる;
+        :何月何日limitedGetPointからlimitedUsePointを引いて残高がいくらになったことを履歴に入れる;
+        break;
+      endif
+    repeat while(limitedGetPointsのすべての値を処理するまで)
+  repeat while(limitedUsePointsのすべての値を処理するまで)
+fork again
+
+  repeat
+    :normalUsePointsから要素を抜き出す;
+    
+    repeat
+      :normalGetPointsから要素を抜き出す;
+
+      :normalGetPointからnormalUsePointを引く;
+      if (normalGetPointのnetAmountがnormalUsePointのnetAmountよりも大きい) then (yes)
+        :normalGetPointのnetAmountを更新する;
+        :normalUsePointのnetAmountを0に更新する;
+        :何月何日normalGetPointからnormalUsePointを引いて残高がいくらになったことを履歴に入れる;
+      else
+        :normalGetPointのnetAmountを0に更新する;
+        :normalUsePointのnetAmountを引いた残りの値に更新する;
+        :normalGetPointからnormalUsePointを引いたことを履歴に入れる;
+        :何月何日normalGetPointからnormalUsePointを引いて残高がいくらになったことを履歴に入れる;
+        break;
+      endif
+    repeat while(normalGetPointsのすべての値を処理するまで)
+  repeat while(normalUsePointsのすべての値を処理するまで)
+
+end fork
+
+:csvに保存する;
+
+:[0]ひとつめGETでNORMALの3400;
+:[1]ふたつめUSEでNORMALの1200;
+:[0] - [1]ひとつめからふたつめを引く;
+:[0]ひとつめGETでNORMALの2200;
+:[2]むっつめGETでNORMALの2600;
+:[3]ここのつめUSEでNORMALの800;
+:[0] - [3]ひとつめからここのつめを引く;
+:[0]ひとつめGETでNORMALの1400;
+:[2]むっつめGETでNORMALの2600;
+
+:[0]みっつめGETでLIMITEDの2400;
+:[1]よっつめGETでLIMITEDの1800;
+:[2]いつつめUSEでLIMITEDの1600;
+:[0] - [2]みっつめからいつつめを引く;
+:[0]みっつめGETでLIMITEDの800;
+:[1]よっつめGETでLIMITEDの1800;
+:[3]ななつめUSEでLIMITEDの1800;
+:[0] - [3]みっつめからななつめを引く;
+:[1] - [3]よっつめからななつめを引く;
+:[0]みっつめGETでLIMITEDの0;
+:[1]よっつめGETでLIMITEDの800;
+:[4]やっつめUSEでLIMITEDの800;
+:[1] - [4]よっつめからやっつめを引く;
+:[0]みっつめGETでLIMITEDの0;
+:[1]よっつめGETでLIMITEDの0;
+
+
+@enduml

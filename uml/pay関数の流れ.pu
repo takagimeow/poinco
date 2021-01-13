@@ -1,0 +1,85 @@
+@startuml
+
+title "pay関数の流れ"
+
+|pay|
+
+start
+
+:dividePointsByDate関数を呼び出す;
+
+|dividePointsByDate|
+:最終取引日が現時点を含めて以前の日付のpointを抽出する;
+
+:最終取引日が現時点よりもあとの日付のpointを抽出する;
+
+|pay|
+:amount関数を呼び出して\n通常ポイント\n限定ポイント\nその合計を取得する;
+
+|amount|
+
+:pointのactionがGETで\nかつ期間限定のポイントのみを抽出する;
+:抽出したものを足し合わせる;
+:pointのactionがGETで\nかつ通常のポイントのみを抽出する;
+:抽出したものを足し合わせる;
+
+|pay|
+
+if (支払金額が0以上\nかつ確定済みポイントが支払金額以上の場合) then (yes)
+  :sortByFTxnDateを呼び出して\n確定済みポイントの配列を最終取引日順にソートする;
+  |dividePointsByType|
+  :確定済みポイントの配列から\n期間限定ポイントの獲得ポイントを取得する;
+  :確定済みポイントの配列から\n期間限定ポイントの使用ポイントを取得する;
+  :確定済みポイントの配列から\n通常ポイントの獲得ポイントを取得する;
+  :確定済みポイントの配列から\n通常ポイントの使用ポイントを取得する;
+  |pay|
+  :paymnetActionLoop関数を呼び出す;
+  |paymentActionLoop|
+  if (現時点の支払金額の値が0より上の場合) then (yes)
+    repeat
+      :paymentAction関数を実行する;
+      :期間限定ポイントの配列からポイントを取り出す;
+      |paymentAction|
+        :そのポイントに対して現時点の支払金額との差分を計算する;
+      |paymentActionLoop|
+      :支払金額とポイントの差分を現時点の支払金額の値として更新する;
+      if (paymentAction関数の返り値のisEnoughがtrueの場合) then (yes)
+        break;
+      endif
+    repeat while(期間限定ポイントのすべての値を処理するまで) 
+  endif
+  |pay|
+  :返ってきた値を変数に代入する;
+  |paymentActionLoop|
+  if (現時点の支払金額の値が0より上の場合) then (yes)
+    repeat
+      :paymentAction関数を実行する;
+      |paymentAction|
+        :通常ポイントの配列からポイントを取り出す;
+        :そのポイントに対して現時点の支払金額との差分を計算する;
+      |paymentActionLoop|
+      :支払金額とポイントの差分を現時点の支払金額の値として更新する;
+      if (paymentAction関数の返り値のisEnoughがtrueの場合) then (yes)
+        break;
+      endif
+    repeat while(通常ポイントのすべての値を処理するまで) 
+  endif
+  |pay|
+  :返ってきた値を変数に代入する;
+  partition 作成 {
+    if (使用可能な期間限定ポイントの中からポイントを使用した場合) then (yes)
+      :actionTypeがUSEの新しい期間限定ポイントを作成する;
+    endif
+    if (使用可能な通常ポイントの中からポイントを使用した場合) then (yes)
+      :actionTypeがUSEの新しい通常ポイントを作成する;
+    endif
+  }
+  :新しく計算しなおされたPoint型の配列と\n使用可能な期間限定ポイントの中から使用したポイント数と\n使用可能な通常ポイントの中から使用したポイント数を返す;
+  stop
+endif
+
+:nullがセットされた結果を返す;
+
+stop
+
+@enduml
