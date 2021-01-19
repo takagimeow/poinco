@@ -1,16 +1,9 @@
 import _ from 'lodash';
-import Crypto from 'crypto';
 import { paymentActionLoop, dividePointsByType } from '../../src/utils/points';
 import { Point, pointConverter } from '../../src/classes/Point';
 import { pay, sortByFTxnDate, print, calc, reset, amount } from '../../src/callbacks';
 
 jest.setTimeout(10000);
-
-const getSecureRandomValue = () => {
-  const buff = Crypto.randomBytes(8); // バイナリで8byteのランダムな値を生成
-  const hex = buff.toString('hex'); // 16進数の文字列に変換
-  return parseInt(hex, 16); // integerに変換して返却
-};
 
 describe('paymentActionLoop関数', () => {
   describe('期間限定ポイントの配列に対して', () => {

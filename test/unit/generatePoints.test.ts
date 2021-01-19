@@ -1,17 +1,10 @@
 import _ from 'lodash';
-import Crypto from 'crypto';
 import { generatePointValue, generatePoints, payMock } from '../../src/generatePoints';
 import { createCSV } from '../../src/utils/csv';
 import { createJSON } from '../../src/utils/json';
 import { Point } from '../../src/classes/Point';
 
 jest.setTimeout(10000);
-
-const getSecureRandomValue = () => {
-  const buff = Crypto.randomBytes(8); // バイナリで8byteのランダムな値を生成
-  const hex = buff.toString('hex'); // 16進数の文字列に変換
-  return parseInt(hex, 16); // integerに変換して返却
-};
 
 describe('generatePoints関数', () => {
   describe('事前', () => {
