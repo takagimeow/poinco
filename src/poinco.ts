@@ -3,7 +3,7 @@
 // import "core-js/fn/array.find"
 
 import * as poinco from './callbacks';
-import { generatePoints, generatePointValue } from './generatePoints';
+// import { generatePoints, generatePointValue } from './generatePoints';
 import { Point, pointConverter, pointConverterForAdmin } from './classes/Point';
 
 export {
@@ -11,6 +11,6 @@ export {
   Point,
   pointConverter,
   pointConverterForAdmin,
-  generatePoints,
-  generatePointValue,
+  // generatePoints,
+  // generatePointValue,
 };
