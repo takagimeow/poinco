@@ -3,6 +3,8 @@ type TransactionType = 'NORMAL' | 'LIMITED' | 'UNKNOWN';
 type TransactionAction = 'GET' | 'USE' | 'UNKNOWN';
 
 export interface Point {
+  id: string;
+  groupId: string;
   txnDate: Date; // 利用日 transaction date
   fTxnDate: Date; // 反映日 final transaction date
   detail: string; // ご利用内容詳細
@@ -16,6 +18,10 @@ export interface Point {
 }
 
 export class Point implements Point {
+  public id: string;
+
+  public groupId: string;
+
   public txnDate: Date;
 
   public fTxnDate: Date;
@@ -57,6 +63,8 @@ export class Point implements Point {
     this.type = type;
     this.action = action;
     this.isLimitedType = type === 'LIMITED' || false;
+    this.id = '';
+    this.groupId = '';
   }
 
   /**
@@ -115,6 +123,8 @@ export const pointConverter = {
       isLimitedType: point.isLimitedType,
       netAmount: point.netAmount,
       action: point.action,
+      id: point.id,
+      groupId: point.groupId,
     };
   },
   fromFirestore: (snapshot: any, options?: any) => {
@@ -123,6 +133,8 @@ export const pointConverter = {
     p.fTxnDate = new Date(data.fTxnDate.seconds * 1000);
     p.txnDate = new Date(data.txnDate.seconds * 1000);
     p.expirationDate = new Date(data.expirationDate.seconds * 1000);
+    p.id = data.id;
+    p.groupId = data.groupId;
     return p;
   },
 };
